@@ -1,0 +1,60 @@
+# Note: This file is compatible with both Docker Compose and Podman Compose.
+# For Podman, you may need to install podman-compose or use `podman compose`.
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: habit-tracker-frontend-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:3001/api
+      - NODE_ENV=development
+    depends_on:
+      - backend
+    networks:
+      - habit-tracker-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: habit-tracker-backend-dev
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - backend_db:/app/db
+    environment:
+      - DATABASE_URL=file:./dev.db
+      - NODE_ENV=development
+      - PORT=3001
+      - JWT_SECRET=dev-jwt-secret-key-here
+    depends_on:
+      - database
+    networks:
+      - habit-tracker-network
+
+  database:
+    image: alpine:latest
+    container_name: habit-tracker-db-dev
+    volumes:
+      - backend_db:/app/db
+    command: sh -c "echo 'Database volume ready' && tail -f /dev/null"
+    networks:
+      - habit-tracker-network
+
+volumes:
+  backend_db:
+    driver: local
+
+networks:
+  habit-tracker-network:
+    driver: bridge

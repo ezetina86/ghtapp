@@ -35,5 +35,7 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true
-  }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["src/tests", "**/*.test.ts", "**/__mocks__"]
 }

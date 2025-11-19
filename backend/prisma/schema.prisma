@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  username    String   @unique
+  password    String
+  displayName String?
+  avatarUrl   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  books       Book[]
+  sessions    ReadingSession[]
+  goals       Goal[]
+  notes       Note[]
+  
+  @@map("users")
+}
+
+model Book {
+  id               String   @id @default(cuid())
+  userId           String
+  title            String
+  author           String
+  isbn             String?
+  genre            String?
+  totalPages       Int      @default(0)
+  coverUrl         String?
+  description      String?
+  publisher        String?
+  publicationYear  Int?
+  status           String   @default("to-read") // to-read, reading, completed
+  currentPage      Int      @default(0)
+  dateAdded        DateTime @default(now())
+  dateStarted      DateTime?
+  dateCompleted    DateTime?
+  
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions         ReadingSession[]
+  notes            Note[]
+  
+  @@map("books")
+}
+
+model ReadingSession {
+  id              String   @id @default(cuid())
+  userId          String
+  bookId          String
+  startTime       DateTime
+  endTime         DateTime?
+  durationMinutes Int      @default(0)
+  pagesRead       Int      @default(0)
+  notes           String?
+  createdAt       DateTime @default(now())
+  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book            Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  
+  @@map("reading_sessions")
+}
+
+model Goal {
+  id           String   @id @default(cuid())
+  userId       String
+  title        String
+  description  String?
+  goalType     String   // daily, weekly, monthly, yearly
+  targetValue  Int
+  targetUnit   String   // minutes, pages, books
+  currentProgress Int   @default(0)
+  startDate    DateTime
+  endDate      DateTime?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("goals")
+}
+
+model Note {
+  id         String   @id @default(cuid())
+  userId     String
+  bookId     String
+  sessionId  String?
+  content    String
+  pageNumber Int?
+  noteType   String   @default("note") // note, highlight, bookmark
+  createdAt  DateTime @default(now())
+  
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book       Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  
+  @@map("notes")
+}

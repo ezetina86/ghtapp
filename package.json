@@ -1,0 +1,36 @@
+{
+  "name": "ghtapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com-personal:ezetina86/ghtapp.git"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "eslint": "^9.39.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
+    "prettier": "^3.6.2"
+  }
+}

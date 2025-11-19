@@ -10,11 +10,12 @@ services:
     container_name: habit-tracker-frontend-dev
     ports:
       - "3000:3000"
+      - "5000:5000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - VITE_API_URL=http://localhost:3001/api
+      - VITE_API_URL=http://localhost:5001/api
       - NODE_ENV=development
     depends_on:
       - backend
@@ -27,7 +28,7 @@ services:
       dockerfile: Dockerfile.dev
     container_name: habit-tracker-backend-dev
     ports:
-      - "3001:3001"
+      - "5001:5001"
     volumes:
       - ./backend:/app
       - /app/node_modules
@@ -35,7 +36,7 @@ services:
     environment:
       - DATABASE_URL=file:./dev.db
       - NODE_ENV=development
-      - PORT=3001
+      - PORT=5001
       - JWT_SECRET=dev-jwt-secret-key-here
     depends_on:
       - database

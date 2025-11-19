@@ -5,11 +5,9 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import { PrismaClient } from "@prisma/client";
 import authRoutes from "./routes/authRoutes.js";
-
 const app = express();
 const prisma = new PrismaClient();
 const port = process.env.PORT || 5001;
-
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || "http://localhost:5000",
@@ -20,13 +18,11 @@ app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
-
 app.use("/api/auth", authRoutes);
-
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
-
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+//# sourceMappingURL=index.js.map

@@ -15,10 +15,12 @@ const config: Config = {
         tsconfig: {
           module: "esnext",
           verbatimModuleSyntax: false,
+          esModuleInterop: true,
         },
       },
     ],
   },
+  transformIgnorePatterns: ["node_modules/(?!@prisma/client)"],
   testMatch: ["**/tests/**/*.test.ts"],
   verbose: true,
   forceExit: true,

@@ -12,6 +12,10 @@ const config: Config = {
       "ts-jest",
       {
         useESM: true,
+        tsconfig: {
+          module: "esnext",
+          verbatimModuleSyntax: false,
+        },
       },
     ],
   },

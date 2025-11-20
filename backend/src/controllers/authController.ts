@@ -59,7 +59,7 @@ export const register = async (req: Request, res: Response) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    res.status(201).json({ user });
+    res.status(201).json({ user, token });
   } catch (error) {
     console.error("Registration error:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -108,6 +108,7 @@ export const login = async (req: Request, res: Response) => {
         avatarUrl: user.avatarUrl,
         createdAt: user.createdAt,
       },
+      token,
     });
   } catch (error) {
     console.error("Login error:", error);

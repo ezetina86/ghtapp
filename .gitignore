@@ -32,6 +32,14 @@ yarn-error.log*
 *.sln
 *.sw?
 
+# TypeScript
+*.js
+*.js.map
+*.d.ts
+*.d.ts.map
+!jest.config.js
+!jest.config.cjs
+
 # Database
 *.db
 *.db-journal

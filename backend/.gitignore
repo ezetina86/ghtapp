@@ -4,8 +4,8 @@ node_modules
 
 /generated/prisma
 
-# Compiled files in src
+# Compiled TypeScript files
+*.d.ts
+*.d.ts.map
 src/**/*.js
 src/**/*.js.map
-src/**/*.d.ts
-src/**/*.d.ts.map

@@ -6,6 +6,8 @@ import { useBookStore } from "../store/bookStore";
 import { api } from "../services/api";
 import type { Note } from "../types/note";
 import { NoteModal } from "../components/books/NoteModal";
+import { ProgressChart } from "../components/progress/ProgressChart";
+import { CompletionEstimate } from "../components/progress/CompletionEstimate";
 
 export const BookDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -95,6 +97,14 @@ export const BookDetails: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Progress Tracking Section */}
+      {id && currentBook.status === "reading" && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <CompletionEstimate bookId={id} />
+          <ProgressChart bookId={id} days={14} />
+        </div>
+      )}
 
       {/* Notes Section */}
       <div className="space-y-4">

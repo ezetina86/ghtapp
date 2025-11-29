@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoutes.js";
 import bookRoutes from "./routes/bookRoutes.js";
 import sessionRoutes from "./routes/sessionRoutes.js";
 import noteRoutes from "./routes/noteRoutes.js";
+import statsRoutes from "./routes/statsRoutes.js";
 
 const app = express();
 const prisma = new PrismaClient();
@@ -31,6 +32,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/sessions", sessionRoutes);
 app.use("/api/notes", noteRoutes);
+app.use("/api/stats", statsRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });

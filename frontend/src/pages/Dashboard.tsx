@@ -1,38 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "../components/ui/Card";
 import {
   BookOpenIcon,
   ClockIcon,
-  ChartBarIcon,
+  DocumentTextIcon,
 } from "@heroicons/react/24/outline";
 import { useAuthStore } from "../store/authStore";
-
+import { useStatsStore } from "../store/statsStore";
 import { SessionTimer } from "../components/sessions/SessionTimer";
+import { StatsCard } from "../components/stats/StatsCard";
+import { ReadingChart } from "../components/stats/ReadingChart";
+import { StreakDisplay } from "../components/stats/StreakDisplay";
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuthStore();
+  const { sessionStats, bookStats, dailyHistory, fetchAllStats, isLoading } =
+    useStatsStore();
 
-  const stats = [
-    {
-      title: "Books Reading",
-      value: "0",
-      icon: BookOpenIcon,
-      color: "neon-cyan",
-    },
-    {
-      title: "Reading Time",
-      value: "0 min",
-      icon: ClockIcon,
-      color: "neon-magenta",
-    },
-    {
-      title: "Books Completed",
-      value: "0",
-      icon: ChartBarIcon,
-      color: "neon-lime",
-    },
-  ];
+  useEffect(() => {
+    fetchAllStats();
+  }, [fetchAllStats]);
 
   return (
     <div className="space-y-6">
@@ -50,19 +38,53 @@ export const Dashboard: React.FC = () => {
       <SessionTimer />
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {stats.map((stat) => (
-          <Card key={stat.title} variant="glass" hover>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-400 mb-1">{stat.title}</p>
-                <p className="text-3xl font-bold text-white">{stat.value}</p>
-              </div>
-              <stat.icon className={`w-12 h-12 text-${stat.color}`} />
-            </div>
-          </Card>
-        ))}
-      </div>
+      {isLoading ? (
+        <div className="text-center text-gray-400 py-8">
+          Loading statistics...
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <StatsCard
+              title="Total Sessions"
+              value={sessionStats?.totalSessions || 0}
+              icon={ClockIcon}
+              color="neon-cyan"
+            />
+            <StatsCard
+              title="Reading Time"
+              value={`${sessionStats?.totalDuration || 0} min`}
+              icon={ClockIcon}
+              color="neon-magenta"
+            />
+            <StatsCard
+              title="Pages Read"
+              value={sessionStats?.totalPages || 0}
+              icon={DocumentTextIcon}
+              color="neon-lime"
+            />
+            <StatsCard
+              title="Books Reading"
+              value={bookStats?.readingBooks || 0}
+              icon={BookOpenIcon}
+              color="neon-cyan"
+              subtitle={`${bookStats?.completedBooks || 0} completed`}
+            />
+          </div>
+
+          {/* Streak Display */}
+          <StreakDisplay currentStreak={sessionStats?.currentStreak || 0} />
+
+          {/* Reading Activity Chart */}
+          {dailyHistory.length > 0 && (
+            <ReadingChart
+              data={dailyHistory}
+              type="bar"
+              dataKey="totalMinutes"
+            />
+          )}
+        </>
+      )}
 
       {/* Quick Actions */}
       <Card variant="neon">
@@ -82,14 +104,6 @@ export const Dashboard: React.FC = () => {
             <ClockIcon className="w-6 h-6 text-neon-magenta" />
             <span className="text-white font-medium">Log Session</span>
           </Link>
-        </div>
-      </Card>
-
-      {/* Recent Activity */}
-      <Card variant="glass">
-        <h2 className="text-xl font-bold text-white mb-4">Recent Activity</h2>
-        <div className="text-center py-8 text-gray-400">
-          <p>No recent activity yet. Start tracking your reading!</p>
         </div>
       </Card>
     </div>

@@ -7,6 +7,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { BooksPage } from "./pages/BooksPage";
 import { BookDetails } from "./pages/BookDetails";
 import { SessionsPage } from "./pages/SessionsPage";
+import { GoalsPage } from "./pages/GoalsPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import "./App.css";
 
@@ -35,6 +36,16 @@ function App() {
             <ProtectedRoute>
               <MainLayout>
                 <BooksPage />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/goals"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <GoalsPage />
               </MainLayout>
             </ProtectedRoute>
           }

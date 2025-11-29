@@ -166,3 +166,57 @@ export const deleteSession = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const getSessionStats = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const [totalSessions, totalDuration, totalPages] = await Promise.all([
+      prisma.readingSession.count({ where: { userId } }),
+      prisma.readingSession.aggregate({
+        where: { userId },
+        _sum: { durationMinutes: true },
+      }),
+      prisma.readingSession.aggregate({
+        where: { userId },
+        _sum: { pagesRead: true },
+      }),
+    ]);
+
+    // Calculate streaks (simplified version)
+    // In a real app, this would be more complex and likely stored/cached
+    const sessions = await prisma.readingSession.findMany({
+      where: { userId },
+      orderBy: { startTime: "desc" },
+      select: { startTime: true },
+    });
+
+    let currentStreak = 0;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Check if read today
+    if (sessions.length > 0 && sessions[0]) {
+      const lastSessionDate = new Date(sessions[0].startTime);
+      lastSessionDate.setHours(0, 0, 0, 0);
+
+      if (lastSessionDate.getTime() === today.getTime()) {
+        currentStreak = 1;
+      }
+    }
+
+    res.json({
+      totalSessions,
+      totalDuration: totalDuration?._sum?.durationMinutes || 0,
+      totalPages: totalPages?._sum?.pagesRead || 0,
+      currentStreak,
+    });
+  } catch (error) {
+    console.error("Get session stats error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

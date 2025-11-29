@@ -5,6 +5,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { Dashboard } from "./pages/Dashboard";
 import { BooksPage } from "./pages/BooksPage";
+import { BookDetails } from "./pages/BookDetails";
 import { SessionsPage } from "./pages/SessionsPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import "./App.css";
@@ -34,6 +35,16 @@ function App() {
             <ProtectedRoute>
               <MainLayout>
                 <BooksPage />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/books/:id"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <BookDetails />
               </MainLayout>
             </ProtectedRoute>
           }

@@ -11,7 +11,7 @@ interface AuthRequest extends Request {
     email: string;
     username: string;
   };
-  file?: Express.Multer.File;
+  file?: Express.Multer.File | undefined;
 }
 
 export const exportBooks = async (req: AuthRequest, res: Response) => {

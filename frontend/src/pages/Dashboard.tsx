@@ -8,19 +8,25 @@ import {
 } from "@heroicons/react/24/outline";
 import { useAuthStore } from "../store/authStore";
 import { useStatsStore } from "../store/statsStore";
+import { useGoalStore } from "../store/goalStore";
 import { SessionTimer } from "../components/sessions/SessionTimer";
 import { StatsCard } from "../components/stats/StatsCard";
 import { ReadingChart } from "../components/stats/ReadingChart";
 import { StreakDisplay } from "../components/stats/StreakDisplay";
+import { GoalCard } from "../components/goals/GoalCard";
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuthStore();
   const { sessionStats, bookStats, dailyHistory, fetchAllStats, isLoading } =
     useStatsStore();
+  const { goals, fetchGoals } = useGoalStore();
 
   useEffect(() => {
     fetchAllStats();
-  }, [fetchAllStats]);
+    fetchGoals(true); // Fetch active goals
+  }, [fetchAllStats, fetchGoals]);
+
+  const activeGoals = goals.slice(0, 2); // Show top 2 active goals
 
   return (
     <div className="space-y-6">
@@ -82,6 +88,26 @@ export const Dashboard: React.FC = () => {
               type="bar"
               dataKey="totalMinutes"
             />
+          )}
+
+          {/* Active Goals Preview */}
+          {activeGoals.length > 0 && (
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold text-white">Current Goals</h2>
+                <Link
+                  to="/goals"
+                  className="text-sm text-neon-cyan hover:text-white"
+                >
+                  View All
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {activeGoals.map((goal) => (
+                  <GoalCard key={goal.id} goal={goal} />
+                ))}
+              </div>
+            </div>
           )}
         </>
       )}

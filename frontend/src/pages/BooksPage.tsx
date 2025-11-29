@@ -1,15 +1,21 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { PlusIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import {
+  PlusIcon,
+  MagnifyingGlassIcon,
+  ArrowUpTrayIcon,
+} from "@heroicons/react/24/outline";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { BookCard3D } from "../components/books/BookCard3D";
 import { BookModal } from "../components/books/BookModal";
+import { ImportExportModal } from "../components/books/ImportExportModal";
 import { useBookStore } from "../store/bookStore";
 
 export const BooksPage: React.FC = () => {
   const { books, fetchBooks } = useBookStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isImportExportOpen, setIsImportExportOpen] = useState(false);
 
   useEffect(() => {
     fetchBooks();
@@ -31,13 +37,23 @@ export const BooksPage: React.FC = () => {
           <h1 className="text-3xl font-bold text-white mb-2">My Books</h1>
           <p className="text-gray-400">Manage your reading collection</p>
         </div>
-        <Button
-          onClick={() => setIsModalOpen(true)}
-          className="flex items-center space-x-2"
-        >
-          <PlusIcon className="w-5 h-5" />
-          <span>Add Book</span>
-        </Button>
+        <div className="flex gap-3">
+          <Button
+            onClick={() => setIsImportExportOpen(true)}
+            variant="secondary"
+            className="flex items-center space-x-2"
+          >
+            <ArrowUpTrayIcon className="w-5 h-5" />
+            <span>Import/Export</span>
+          </Button>
+          <Button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center space-x-2"
+          >
+            <PlusIcon className="w-5 h-5" />
+            <span>Add Book</span>
+          </Button>
+        </div>
       </div>
 
       {/* Search Bar */}
@@ -61,6 +77,10 @@ export const BooksPage: React.FC = () => {
 
       {/* Add/Edit Book Modal */}
       <BookModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <ImportExportModal
+        isOpen={isImportExportOpen}
+        onClose={() => setIsImportExportOpen(false)}
+      />
     </div>
   );
 };

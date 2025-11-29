@@ -200,7 +200,7 @@ export const getSessionStats = async (req: AuthRequest, res: Response) => {
     today.setHours(0, 0, 0, 0);
 
     // Check if read today
-    if (sessions.length > 0) {
+    if (sessions.length > 0 && sessions[0]) {
       const lastSessionDate = new Date(sessions[0].startTime);
       lastSessionDate.setHours(0, 0, 0, 0);
 

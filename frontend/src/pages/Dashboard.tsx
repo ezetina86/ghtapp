@@ -8,6 +8,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { useAuthStore } from "../store/authStore";
 
+import { SessionTimer } from "../components/sessions/SessionTimer";
+
 export const Dashboard: React.FC = () => {
   const { user } = useAuthStore();
 
@@ -43,6 +45,9 @@ export const Dashboard: React.FC = () => {
           Track your reading habits and monitor your progress
         </p>
       </div>
+
+      {/* Session Timer */}
+      <SessionTimer />
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

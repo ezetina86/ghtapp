@@ -20,11 +20,13 @@ type SessionFormData = z.infer<typeof sessionSchema>;
 interface SessionFormProps {
   onSubmit: (data: CreateSessionInput) => Promise<void>;
   isLoading?: boolean;
+  initialData?: Partial<SessionFormData>;
 }
 
 export const SessionForm: React.FC<SessionFormProps> = ({
   onSubmit,
   isLoading,
+  initialData,
 }) => {
   const { books } = useBookStore();
   const {
@@ -37,6 +39,7 @@ export const SessionForm: React.FC<SessionFormProps> = ({
       startTime: new Date().toISOString().slice(0, 16),
       durationMinutes: 30,
       pagesRead: 0,
+      ...initialData,
     },
   });
 

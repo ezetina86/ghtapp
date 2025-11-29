@@ -28,7 +28,7 @@ export const LoginForm: React.FC = () => {
         throw new Error(data.error || "Login failed");
       }
 
-      login(data.user);
+      login(data.user, data.token);
       navigate("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");

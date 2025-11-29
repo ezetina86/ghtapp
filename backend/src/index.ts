@@ -11,6 +11,7 @@ import noteRoutes from "./routes/noteRoutes.js";
 import statsRoutes from "./routes/statsRoutes.js";
 import goalRoutes from "./routes/goalRoutes.js";
 import importExportRoutes from "./routes/importExportRoutes.js";
+import progressRoutes from "./routes/progressRoutes.js";
 
 const app = express();
 const prisma = new PrismaClient();
@@ -37,6 +38,7 @@ app.use("/api/notes", noteRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/goals", goalRoutes);
 app.use("/api/data", importExportRoutes);
+app.use("/api/progress", progressRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });

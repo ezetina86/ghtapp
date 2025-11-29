@@ -16,6 +16,7 @@ import { StreakDisplay } from "../components/stats/StreakDisplay";
 import { GoalCard } from "../components/goals/GoalCard";
 import { AnimatedProgress } from "../components/ui/AnimatedProgress";
 import { AchievementBadge } from "../components/gamification/AchievementBadge";
+import { ReadingPaceCard } from "../components/progress/ReadingPaceCard";
 import { FireIcon, StarIcon } from "@heroicons/react/24/solid";
 
 export const Dashboard: React.FC = () => {
@@ -81,8 +82,11 @@ export const Dashboard: React.FC = () => {
             />
           </div>
 
-          {/* Streak Display */}
-          <StreakDisplay currentStreak={sessionStats?.currentStreak || 0} />
+          {/* Reading Pace and Streak */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ReadingPaceCard />
+            <StreakDisplay currentStreak={sessionStats?.currentStreak || 0} />
+          </div>
 
           {/* Reading Activity Chart */}
           {dailyHistory.length > 0 && (

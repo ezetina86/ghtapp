@@ -15,7 +15,7 @@ interface AuthState {
   token: string | null; // We might not need to store token if using httpOnly cookies, but keeping for state check
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (user: User) => void;
+  login: (user: User, token: string) => void;
   logout: () => void;
   setUser: (user: User | null) => void;
 }
@@ -28,12 +28,12 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isLoading: false,
 
-      login: (user) => {
-        set({ user, isAuthenticated: true });
+      login: (user, token) => {
+        set({ user, token, isAuthenticated: true });
       },
 
       logout: () => {
-        set({ user: null, isAuthenticated: false });
+        set({ user: null, token: null, isAuthenticated: false });
       },
 
       setUser: (user) => {
@@ -44,6 +44,7 @@ export const useAuthStore = create<AuthState>()(
       name: "auth-storage",
       partialize: (state) => ({
         user: state.user,
+        token: state.token,
         isAuthenticated: state.isAuthenticated,
       }),
     },

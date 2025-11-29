@@ -29,7 +29,7 @@ export const RegisterForm: React.FC = () => {
         throw new Error(data.error || "Registration failed");
       }
 
-      login(data.user);
+      login(data.user, data.token);
       navigate("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");

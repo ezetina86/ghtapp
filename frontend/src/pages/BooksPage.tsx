@@ -1,17 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import React, { useEffect, useState, useMemo } from "react";
+import { PlusIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Button } from "../components/ui/Button";
-import { BookList } from "../components/books/BookList";
+import { Input } from "../components/ui/Input";
+import { BookCard3D } from "../components/books/BookCard3D";
 import { BookModal } from "../components/books/BookModal";
 import { useBookStore } from "../store/bookStore";
 
 export const BooksPage: React.FC = () => {
+  const { books, fetchBooks } = useBookStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { fetchBooks } = useBookStore();
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchBooks();
   }, [fetchBooks]);
+
+  const filteredBooks = useMemo(() => {
+    return books.filter(
+      (book) =>
+        book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        book.author.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+  }, [books, searchTerm]);
 
   return (
     <div className="space-y-6">
@@ -30,8 +40,24 @@ export const BooksPage: React.FC = () => {
         </Button>
       </div>
 
+      {/* Search Bar */}
+      <div className="relative">
+        <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+        <Input
+          type="text"
+          placeholder="Search books by title or author..."
+          className="pl-10 pr-4 py-2 w-full bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
       {/* Book List */}
-      <BookList />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {filteredBooks.map((book) => (
+          <BookCard3D key={book.id} book={book} />
+        ))}
+      </div>
 
       {/* Add/Edit Book Modal */}
       <BookModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />

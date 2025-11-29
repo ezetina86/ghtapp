@@ -14,6 +14,9 @@ import { StatsCard } from "../components/stats/StatsCard";
 import { ReadingChart } from "../components/stats/ReadingChart";
 import { StreakDisplay } from "../components/stats/StreakDisplay";
 import { GoalCard } from "../components/goals/GoalCard";
+import { AnimatedProgress } from "../components/ui/AnimatedProgress";
+import { AchievementBadge } from "../components/gamification/AchievementBadge";
+import { FireIcon, StarIcon } from "@heroicons/react/24/solid";
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuthStore();
@@ -109,6 +112,50 @@ export const Dashboard: React.FC = () => {
               </div>
             </div>
           )}
+
+          {/* Achievements & Progress */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <h2 className="text-xl font-bold text-white mb-4">
+                Recent Achievements
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <AchievementBadge
+                  title="7 Day Streak"
+                  description="Read for 7 days in a row"
+                  icon={FireIcon}
+                  isUnlocked={(sessionStats?.currentStreak || 0) >= 7}
+                  color="text-orange-500"
+                />
+                <AchievementBadge
+                  title="Bookworm"
+                  description="Read 10 books"
+                  icon={BookOpenIcon}
+                  isUnlocked={(bookStats?.completedBooks || 0) >= 10}
+                  color="text-neon-magenta"
+                />
+                <AchievementBadge
+                  title="Early Bird"
+                  description="Read before 8 AM"
+                  icon={StarIcon}
+                  isUnlocked={false}
+                  color="text-yellow-400"
+                />
+              </div>
+            </div>
+
+            <div className="bg-gray-800/30 border border-gray-700 rounded-lg p-6 flex flex-col items-center justify-center">
+              <h3 className="text-lg font-bold text-white mb-6">
+                Monthly Goal
+              </h3>
+              <AnimatedProgress
+                percentage={75}
+                label="Reading Goal"
+                subLabel="300 / 400 pages"
+                color="#06b6d4"
+              />
+            </div>
+          </div>
         </>
       )}
 

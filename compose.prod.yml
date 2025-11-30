@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: habit-tracker-frontend-prod
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - habit-tracker-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: habit-tracker-backend-prod
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_ENV=production
+      - PORT=5001
+      - DATABASE_URL=file:/app/db/prod.db
+      - JWT_SECRET=${JWT_SECRET:-production_secret_key_change_me}
+      - FRONTEND_URL=http://localhost
+    volumes:
+      - backend_data:/app/db
+    depends_on:
+      - database
+    networks:
+      - habit-tracker-network
+
+  database:
+    image: alpine:latest
+    container_name: habit-tracker-db-prod
+    volumes:
+      - backend_data:/app/db
+    command: sh -c "echo 'Database volume ready' && tail -f /dev/null"
+    networks:
+      - habit-tracker-network
+
+volumes:
+  backend_data:
+    driver: local
+
+networks:
+  habit-tracker-network:
+    driver: bridge

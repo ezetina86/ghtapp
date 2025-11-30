@@ -36,17 +36,34 @@ interface SessionStats {
   currentStreak: number;
 }
 
+interface AdvancedStats {
+  durationDistribution: {
+    lessThan15: number;
+    between15And30: number;
+    between30And60: number;
+    moreThan60: number;
+  };
+  timeOfDayDistribution: { hour: number; count: number }[];
+  bookStatusDistribution: {
+    toRead: number;
+    reading: number;
+    completed: number;
+  };
+}
+
 interface StatsState {
   dailyHistory: DailyReading[];
   bookStats: BookStats | null;
   readingPace: ReadingPace | null;
   sessionStats: SessionStats | null;
+  advancedStats: AdvancedStats | null;
   isLoading: boolean;
   error: string | null;
   fetchDailyHistory: (days?: number) => Promise<void>;
   fetchBookStats: () => Promise<void>;
   fetchReadingPace: () => Promise<void>;
   fetchSessionStats: () => Promise<void>;
+  fetchAdvancedStats: () => Promise<void>;
   fetchAllStats: () => Promise<void>;
 }
 
@@ -55,6 +72,7 @@ export const useStatsStore = create<StatsState>((set) => ({
   bookStats: null,
   readingPace: null,
   sessionStats: null,
+  advancedStats: null,
   isLoading: false,
   error: null,
 
@@ -98,21 +116,38 @@ export const useStatsStore = create<StatsState>((set) => ({
     }
   },
 
+  fetchAdvancedStats: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await api.get("/stats/advanced");
+      set({ advancedStats: response.data, isLoading: false });
+    } catch (error: any) {
+      set({ error: error.message, isLoading: false });
+    }
+  },
+
   fetchAllStats: async () => {
     set({ isLoading: true, error: null });
     try {
-      const [dailyHistory, bookStats, readingPace, sessionStats] =
-        await Promise.all([
-          api.get("/stats/daily-history?days=30"),
-          api.get("/stats/books"),
-          api.get("/stats/reading-pace"),
-          api.get("/sessions/stats"),
-        ]);
+      const [
+        dailyHistory,
+        bookStats,
+        readingPace,
+        sessionStats,
+        advancedStats,
+      ] = await Promise.all([
+        api.get("/stats/daily-history?days=30"),
+        api.get("/stats/books"),
+        api.get("/stats/reading-pace"),
+        api.get("/sessions/stats"),
+        api.get("/stats/advanced"),
+      ]);
       set({
         dailyHistory: dailyHistory.data,
         bookStats: bookStats.data,
         readingPace: readingPace.data,
         sessionStats: sessionStats.data,
+        advancedStats: advancedStats.data,
         isLoading: false,
       });
     } catch (error: any) {

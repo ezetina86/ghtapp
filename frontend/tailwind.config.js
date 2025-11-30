@@ -18,6 +18,7 @@ export default {
       animation: {
         glow: "glow 2s ease-in-out infinite alternate",
         float: "float 3s ease-in-out infinite",
+        "slide-in-right": "slideInRight 0.3s ease-out",
       },
       keyframes: {
         glow: {
@@ -31,6 +32,10 @@ export default {
         float: {
           "0%, 100%": { transform: "translateY(0px)" },
           "50%": { transform: "translateY(-10px)" },
+        },
+        slideInRight: {
+          "0%": { transform: "translateX(100%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
         },
       },
     },

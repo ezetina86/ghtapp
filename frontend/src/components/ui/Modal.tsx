@@ -1,5 +1,5 @@
-import React, { Fragment } from "react";
-import { Dialog, Transition } from "@headlessui/react";
+import React from "react";
+import { Dialog, Transition, TransitionChild } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 interface ModalProps {
@@ -25,10 +25,9 @@ export const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={onClose}>
-        <Transition.Child
-          as={Fragment}
+    <Transition show={isOpen} appear>
+      <Dialog onClose={onClose} className="relative z-50">
+        <TransitionChild
           enter="ease-out duration-300"
           enterFrom="opacity-0"
           enterTo="opacity-100"
@@ -37,12 +36,11 @@ export const Modal: React.FC<ModalProps> = ({
           leaveTo="opacity-0"
         >
           <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" />
-        </Transition.Child>
+        </TransitionChild>
 
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child
-              as={Fragment}
+            <TransitionChild
               enter="ease-out duration-300"
               enterFrom="opacity-0 scale-95"
               enterTo="opacity-100 scale-100"
@@ -72,7 +70,7 @@ export const Modal: React.FC<ModalProps> = ({
 
                 <div className="mt-2">{children}</div>
               </Dialog.Panel>
-            </Transition.Child>
+            </TransitionChild>
           </div>
         </div>
       </Dialog>

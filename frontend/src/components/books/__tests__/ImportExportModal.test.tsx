@@ -62,9 +62,7 @@ describe("ImportExportModal", () => {
   });
 
   it("should handle file upload", async () => {
-    const { container } = render(
-      <ImportExportModal isOpen={true} onClose={mockOnClose} />,
-    );
+    render(<ImportExportModal isOpen={true} onClose={mockOnClose} />);
     fireEvent.click(screen.getByText("Import"));
 
     const file = new File(["test content"], "test.json", {

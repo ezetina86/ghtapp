@@ -29,7 +29,7 @@ export const authenticateToken = (
 
   jwt.verify(
     token,
-    process.env.JWT_SECRET || "fallback-secret",
+    process.env.JWT_SECRET || "test-secret",
     (err: any, user: any) => {
       if (err) {
         return res.status(403).json({ error: "Invalid token" });

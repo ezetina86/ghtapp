@@ -4,6 +4,8 @@ import {
   Line,
   BarChart,
   Bar,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -19,7 +21,7 @@ interface ReadingChartProps {
     totalPages: number;
     sessionCount: number;
   }>;
-  type?: "line" | "bar";
+  type?: "line" | "bar" | "area";
   dataKey?: "totalMinutes" | "totalPages" | "sessionCount";
 }
 
@@ -46,8 +48,9 @@ export const ReadingChart: React.FC<ReadingChartProps> = ({
     }
   };
 
-  const ChartComponent = type === "line" ? LineChart : BarChart;
-  const DataComponent = type === "line" ? Line : Bar;
+  const ChartComponent =
+    type === "line" ? LineChart : type === "area" ? AreaChart : BarChart;
+  const DataComponent = type === "line" ? Line : type === "area" ? Area : Bar;
 
   return (
     <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-gray-700/50">

@@ -165,3 +165,68 @@ export const getReadingPace = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+export const getAdvancedStats = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const sessions = await prisma.readingSession.findMany({
+      where: { userId },
+      select: {
+        startTime: true,
+        durationMinutes: true,
+      },
+    });
+
+    // Session Duration Distribution
+    const durationDistribution = {
+      lessThan15: 0,
+      between15And30: 0,
+      between30And60: 0,
+      moreThan60: 0,
+    };
+
+    // Time of Day Analysis (0-23)
+    const timeOfDayDistribution = new Array(24).fill(0);
+
+    sessions.forEach((session) => {
+      // Duration
+      if (session.durationMinutes < 15) durationDistribution.lessThan15++;
+      else if (session.durationMinutes < 30)
+        durationDistribution.between15And30++;
+      else if (session.durationMinutes < 60)
+        durationDistribution.between30And60++;
+      else durationDistribution.moreThan60++;
+
+      // Time of Day
+      const hour = new Date(session.startTime).getHours();
+      timeOfDayDistribution[hour]++;
+    });
+
+    // Book Status Distribution
+    const [toRead, reading, completed] = await Promise.all([
+      prisma.book.count({ where: { userId, status: "to-read" } }),
+      prisma.book.count({ where: { userId, status: "reading" } }),
+      prisma.book.count({ where: { userId, status: "completed" } }),
+    ]);
+
+    res.json({
+      durationDistribution,
+      timeOfDayDistribution: timeOfDayDistribution.map((count, hour) => ({
+        hour,
+        count,
+      })),
+      bookStatusDistribution: {
+        toRead,
+        reading,
+        completed,
+      },
+    });
+  } catch (error) {
+    console.error("Get advanced stats error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

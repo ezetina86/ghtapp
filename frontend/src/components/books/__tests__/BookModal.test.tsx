@@ -53,6 +53,7 @@ describe("BookModal", () => {
       status: "to-read" as const,
       createdAt: new Date(),
       updatedAt: new Date(),
+      dateAdded: new Date().toISOString(),
       userId: "user1",
     };
 

@@ -40,6 +40,7 @@ jobs:
         run: npm test
         env:
           DATABASE_URL: file:./dev.db
+          JWT_SECRET: test-secret
 
       - name: Build
         run: npm run build

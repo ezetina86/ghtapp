@@ -6,6 +6,13 @@
   --color-neon-lime: #84cc16;
 }
 
+@layer base {
+  body {
+    background-color: #0a0a0a; /* dark-900 */
+    color: #ffffff;
+  }
+}
+
 @layer utilities {
   .perspective-1000 {
     perspective: 1000px;
